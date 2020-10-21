@@ -1,0 +1,331 @@
+{
+  "contractName": "Enum",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":\"Enum\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":{\"keccak256\":\"0xdb0b5f79df4b271f35240a5b0832eed016a6f3da9a48fc550f4140efc0b36f00\",\"urls\":[\"bzz-raw://5cb846f5774f887d7833816998b3031a1a8a240fa978e9e0b3920063db43e75b\",\"dweb:/ipfs/QmPLueJJJC7yLz9wN4f6BNoSzwEoCaoBNnYHhfo5wgKBth\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212208ea1bdc6c27f550e8f870627ad49c15cc836318fb8548b25a10cbfee215077db64736f6c634300060c0033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212208ea1bdc6c27f550e8f870627ad49c15cc836318fb8548b25a10cbfee215077db64736f6c634300060c0033",
+  "immutableReferences": {},
+  "sourceMap": "163:347:1:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "163:347:1:-:0;;;;;",
+  "source": "/// @title Enum - Collection of enums\r\n/// Original concept from Richard Meissner - <richard@gnosis.pm> Gnosis safe contracts\r\npragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Enum {\r\n    enum Operation {\r\n        Call,\r\n        DelegateCall,\r\n        Create,\r\n        ERC20, \r\n        ERC20Approve\r\n    }\r\n    \r\n    enum SubscriptionStatus {\r\n        ACTIVE,\r\n        PAUSED,\r\n        CANCELLED,\r\n        EXPIRED\r\n    }\r\n    \r\n    enum Period {\r\n        INIT,\r\n        DAY,\r\n        WEEK,\r\n        MONTH\r\n    }\r\n}",
+  "sourcePath": "/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
+  "ast": {
+    "absolutePath": "/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
+    "exportedSymbols": {
+      "Enum": [
+        29
+      ]
+    },
+    "id": 30,
+    "license": null,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".21",
+          "<",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "127:32:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 29,
+        "linearizedBaseContracts": [
+          29
+        ],
+        "name": "Enum",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "Enum.Operation",
+            "id": 18,
+            "members": [
+              {
+                "id": 13,
+                "name": "Call",
+                "nodeType": "EnumValue",
+                "src": "210:4:1"
+              },
+              {
+                "id": 14,
+                "name": "DelegateCall",
+                "nodeType": "EnumValue",
+                "src": "225:12:1"
+              },
+              {
+                "id": 15,
+                "name": "Create",
+                "nodeType": "EnumValue",
+                "src": "248:6:1"
+              },
+              {
+                "id": 16,
+                "name": "ERC20",
+                "nodeType": "EnumValue",
+                "src": "265:5:1"
+              },
+              {
+                "id": 17,
+                "name": "ERC20Approve",
+                "nodeType": "EnumValue",
+                "src": "282:12:1"
+              }
+            ],
+            "name": "Operation",
+            "nodeType": "EnumDefinition",
+            "src": "184:117:1"
+          },
+          {
+            "canonicalName": "Enum.SubscriptionStatus",
+            "id": 23,
+            "members": [
+              {
+                "id": 19,
+                "name": "ACTIVE",
+                "nodeType": "EnumValue",
+                "src": "348:6:1"
+              },
+              {
+                "id": 20,
+                "name": "PAUSED",
+                "nodeType": "EnumValue",
+                "src": "365:6:1"
+              },
+              {
+                "id": 21,
+                "name": "CANCELLED",
+                "nodeType": "EnumValue",
+                "src": "382:9:1"
+              },
+              {
+                "id": 22,
+                "name": "EXPIRED",
+                "nodeType": "EnumValue",
+                "src": "402:7:1"
+              }
+            ],
+            "name": "SubscriptionStatus",
+            "nodeType": "EnumDefinition",
+            "src": "313:103:1"
+          },
+          {
+            "canonicalName": "Enum.Period",
+            "id": 28,
+            "members": [
+              {
+                "id": 24,
+                "name": "INIT",
+                "nodeType": "EnumValue",
+                "src": "451:4:1"
+              },
+              {
+                "id": 25,
+                "name": "DAY",
+                "nodeType": "EnumValue",
+                "src": "466:3:1"
+              },
+              {
+                "id": 26,
+                "name": "WEEK",
+                "nodeType": "EnumValue",
+                "src": "480:4:1"
+              },
+              {
+                "id": 27,
+                "name": "MONTH",
+                "nodeType": "EnumValue",
+                "src": "495:5:1"
+              }
+            ],
+            "name": "Period",
+            "nodeType": "EnumDefinition",
+            "src": "428:79:1"
+          }
+        ],
+        "scope": 30,
+        "src": "163:347:1"
+      }
+    ],
+    "src": "127:383:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
+    "exportedSymbols": {
+      "Enum": [
+        29
+      ]
+    },
+    "id": 30,
+    "license": null,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".21",
+          "<",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "127:32:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 29,
+        "linearizedBaseContracts": [
+          29
+        ],
+        "name": "Enum",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "Enum.Operation",
+            "id": 18,
+            "members": [
+              {
+                "id": 13,
+                "name": "Call",
+                "nodeType": "EnumValue",
+                "src": "210:4:1"
+              },
+              {
+                "id": 14,
+                "name": "DelegateCall",
+                "nodeType": "EnumValue",
+                "src": "225:12:1"
+              },
+              {
+                "id": 15,
+                "name": "Create",
+                "nodeType": "EnumValue",
+                "src": "248:6:1"
+              },
+              {
+                "id": 16,
+                "name": "ERC20",
+                "nodeType": "EnumValue",
+                "src": "265:5:1"
+              },
+              {
+                "id": 17,
+                "name": "ERC20Approve",
+                "nodeType": "EnumValue",
+                "src": "282:12:1"
+              }
+            ],
+            "name": "Operation",
+            "nodeType": "EnumDefinition",
+            "src": "184:117:1"
+          },
+          {
+            "canonicalName": "Enum.SubscriptionStatus",
+            "id": 23,
+            "members": [
+              {
+                "id": 19,
+                "name": "ACTIVE",
+                "nodeType": "EnumValue",
+                "src": "348:6:1"
+              },
+              {
+                "id": 20,
+                "name": "PAUSED",
+                "nodeType": "EnumValue",
+                "src": "365:6:1"
+              },
+              {
+                "id": 21,
+                "name": "CANCELLED",
+                "nodeType": "EnumValue",
+                "src": "382:9:1"
+              },
+              {
+                "id": 22,
+                "name": "EXPIRED",
+                "nodeType": "EnumValue",
+                "src": "402:7:1"
+              }
+            ],
+            "name": "SubscriptionStatus",
+            "nodeType": "EnumDefinition",
+            "src": "313:103:1"
+          },
+          {
+            "canonicalName": "Enum.Period",
+            "id": 28,
+            "members": [
+              {
+                "id": 24,
+                "name": "INIT",
+                "nodeType": "EnumValue",
+                "src": "451:4:1"
+              },
+              {
+                "id": 25,
+                "name": "DAY",
+                "nodeType": "EnumValue",
+                "src": "466:3:1"
+              },
+              {
+                "id": 26,
+                "name": "WEEK",
+                "nodeType": "EnumValue",
+                "src": "480:4:1"
+              },
+              {
+                "id": 27,
+                "name": "MONTH",
+                "nodeType": "EnumValue",
+                "src": "495:5:1"
+              }
+            ],
+            "name": "Period",
+            "nodeType": "EnumDefinition",
+            "src": "428:79:1"
+          }
+        ],
+        "scope": 30,
+        "src": "163:347:1"
+      }
+    ],
+    "src": "127:383:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.12+commit.27d51765.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.1",
+  "updatedAt": "2020-10-21T00:37:57.198Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

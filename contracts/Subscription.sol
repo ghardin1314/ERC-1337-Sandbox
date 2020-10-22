@@ -93,7 +93,7 @@ contract Subscription is Enum {
             uint256 subscriptionHash
         ) 
         public 
-
+        view
         returns (
             bool success
         ) {
@@ -244,7 +244,7 @@ contract Subscription is Enum {
         if(signer != msg.sender) {
             return false;
         } else {
-            delete hashToSubscription[subscriptionHash];
+            hashToSubscription[subscriptionHash] = 0;
             hashToSubscription[modifyStatusHash] = subNumber;
             SubscriptionList[subNumber].status = status;
             return true;

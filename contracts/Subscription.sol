@@ -16,8 +16,6 @@ contract Subscription is Enum {
     using SafeMath for uint256;
     using ECDSA for bytes32;
 
-    constructor() public { }
-
     receive () external payable {
         emit Received(msg.sender, msg.value);
     }
@@ -36,6 +34,7 @@ contract Subscription is Enum {
         address gasToken;
         bytes data;
         bytes meta;
+        // bytes32 subscriptionHash;
     }
 
     struct MetaStruct {
@@ -47,6 +46,23 @@ contract Subscription is Enum {
 
     Subscriptions[] public SubscriptionList;
 
+    constructor() public {
+        // Make first subscription object in list invalid
+        SubscriptionList.push(Subscriptions(
+            address(0),
+            Enum.SubscriptionStatus(3),
+            Enum.Period(0),
+            Enum.Operation(2),
+            0,
+            0,
+            0,
+            0,
+            address(0),
+            abi.encode(0),
+            abi.encode(0)
+        ));
+    }
+
     //------------------- Events -------------------
 
     event Received (address indexed sender, uint value);
@@ -55,6 +71,7 @@ contract Subscription is Enum {
 
     event addressEvent (address add);
     event uintEvent (uint256 a);
+    event boolEvent (bool truth);
 
     //------------------- Mapping -------------------
 
@@ -65,7 +82,7 @@ contract Subscription is Enum {
     // In my case, use this to charge the subscription cut possibly?
     mapping(bytes32 => bool) public publisherSigned;
 
-    mapping(bytes32 => uint) public hashToSubscription;
+    mapping(bytes32 => uint256) public hashToSubscription;
     //------------------- Public View Functions -------------------
 
     /* @dev Checks if the subscription is valid.
@@ -76,12 +93,13 @@ contract Subscription is Enum {
             uint256 subscriptionHash
         ) 
         public 
-        view 
+
         returns (
             bool success
         ) {
-            // TODO
-            return true;
+
+            return hashToSubscription[bytes32(subscriptionHash)] != 0;
+
         }
 
     /* @dev returns the value of the subscription
@@ -101,10 +119,13 @@ contract Subscription is Enum {
         ) {
             // TODO
 
-            status = 0;
+ 
             nextWithdraw = 0;
 
-            return (status, nextWithdraw);
+            return (
+                uint256(SubscriptionList[hashToSubscription[bytes32(subscriptionHash)]].status), 
+                nextWithdraw
+                );
         }
 
     /* @dev returns the hash of cocatenated inputs to the address of the contract holding the logic.,
@@ -151,7 +172,8 @@ contract Subscription is Enum {
                 dataGas, 
                 gasPrice, 
                 gasToken, 
-                meta
+                meta,
+                Enum.SubscriptionStatus.ACTIVE
         ));
         }
 
@@ -170,8 +192,28 @@ contract Subscription is Enum {
             bytes32 modifyStatusHash
         ){
         // TODO
-        modifyStatusHash = "TODO";
-        return modifyStatusHash;
+
+        uint subscriptionId = hashToSubscription[subscriptionHash];
+
+        require (subscriptionId != 0, "Invalid subscriptionHash" );
+
+        // does status go into data?
+
+        return keccak256(
+            abi.encodePacked(
+                byte(0x19), 
+                byte(0), 
+                SubscriptionList[subscriptionId].subscriber, 
+                SubscriptionList[subscriptionId].value, 
+                SubscriptionList[subscriptionId].data, 
+                SubscriptionList[subscriptionId].operation, 
+                SubscriptionList[subscriptionId].txGas, 
+                SubscriptionList[subscriptionId].dataGas, 
+                SubscriptionList[subscriptionId].gasPrice, 
+                SubscriptionList[subscriptionId].gasToken, 
+                SubscriptionList[subscriptionId].meta,
+                status
+        ));
         }
 
     //------------------- Public Functions -------------------
@@ -202,6 +244,8 @@ contract Subscription is Enum {
         if(signer != msg.sender) {
             return false;
         } else {
+            delete hashToSubscription[subscriptionHash];
+            hashToSubscription[modifyStatusHash] = subNumber;
             SubscriptionList[subNumber].status = status;
             return true;
         }
@@ -260,12 +304,13 @@ contract Subscription is Enum {
                 if (signer != msg.sender) {
 
                     return false;
+
                 } else {
 
                     SubscriptionList.push(Subscriptions(
                             to, 
                             Enum.SubscriptionStatus.ACTIVE, 
-                            Enum.Period.MONTH, // This should come from meta array 
+                            Enum.Period(periodFromMeta(meta)), // This should come from meta array 
                             operation, 
                             value, 
                             txGas, 
@@ -279,7 +324,7 @@ contract Subscription is Enum {
 
                     emit createdSubscription(to);
 
-                    hashToSubscription[_subHash] = SubscriptionList.length -1;
+                    hashToSubscription[_subHash] = SubscriptionList.length - 1;
                 }
             }
             return true;
@@ -295,5 +340,25 @@ contract Subscription is Enum {
             address
         )  {
         return subscriptionHash.toEthSignedMessageHash().recover(signatures);
+    }
+
+    function refundAddressFromMeta(
+        bytes memory meta
+    ) private pure
+    returns (
+        address
+    ){
+        (address refundAddress, uint256 period, uint256 offChainId, uint256 expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
+        return refundAddress;
+    }
+
+    function periodFromMeta(
+        bytes memory meta
+    ) private pure
+    returns (
+        uint256
+    ){
+        (address refundAddress, uint256 period, uint256 offChainId, uint256 expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
+        return period;
     }
 }

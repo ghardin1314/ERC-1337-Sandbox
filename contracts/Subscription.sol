@@ -38,12 +38,23 @@ contract Subscription is Enum {
         bytes meta;
     }
 
+    struct MetaStruct {
+        address refundAddress;
+        uint256 period;
+        uint256 offChainID;
+        uint256 expiration;
+    }
+
     Subscriptions[] public SubscriptionList;
 
     //------------------- Events -------------------
 
     event Received (address indexed sender, uint value);
+    event createdSubscription(address to);
 
+
+    event addressEvent (address add);
+    event uintEvent (uint256 a);
 
     //------------------- Mapping -------------------
 
@@ -127,7 +138,6 @@ contract Subscription is Enum {
             bytes32 subscriptionHash
         ) {
             // TODO: Add requirements 
-
             
         return keccak256(
             abi.encodePacked(
@@ -231,7 +241,8 @@ contract Subscription is Enum {
             // TODO
 
             // TODO: Unpack dynamic meta array
-
+            // MetaStruct memory _meta;
+            // (_meta.refundAddress, _meta.period, _meta.offChainID, _meta.expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
 
             // create subscription hash
 
@@ -241,13 +252,16 @@ contract Subscription is Enum {
 
             address signer = getSubscriptionSigner(_subHash, signatures);
 
+            // emit addressEvent(signer);
+
             // If creating subscription
             if (operation == Enum.Operation.Create) {
                 // Subscriber must initialize their own subscription
                 if (signer != msg.sender) {
+
                     return false;
                 } else {
- 
+
                     SubscriptionList.push(Subscriptions(
                             to, 
                             Enum.SubscriptionStatus.ACTIVE, 
@@ -262,6 +276,8 @@ contract Subscription is Enum {
                             meta
                         )
                     );
+
+                    emit createdSubscription(to);
 
                     hashToSubscription[_subHash] = SubscriptionList.length -1;
                 }

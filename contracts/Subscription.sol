@@ -82,7 +82,7 @@ contract Subscription is Enum {
     event addressEvent (address add);
     event uintEvent (uint256 a);
     event boolEvent (bool truth);
-    event todoEvent (string todo);
+    event stringEvent (string todo);
 
     //------------------- Mapping -------------------
 
@@ -317,7 +317,7 @@ contract Subscription is Enum {
                             txGas, 
                             dataGas, 
                             gasPrice,
-                            block.timestamp, 
+                            block.timestamp - 1, 
                             gasToken, 
                             data, 
                             meta
@@ -344,9 +344,7 @@ contract Subscription is Enum {
                     _updateTimestamp(_subHash);
                     return _transferTokens(_subHash);
                 }
-
             }
-            return true;
         }
 
     //------------------- Private Functions -------------------
@@ -420,14 +418,15 @@ contract Subscription is Enum {
         Subscriptions memory _subscription = SubscriptionList[hashToSubscription[_subHash]];
 
         address _tokenAddress = _tokenFromData(_subscription.data);
-
-        if (ERC20(_tokenAddress).allowance(_publisher, address(this)) == 0) {
+        
+        if (ERC20(_tokenAddress).allowance(_subscription.subscriber, address(this)) == 0) {
             // No allowance left on ERC20 contract so setting to expire
             SubscriptionList[hashToSubscription[_subHash]].status = Enum.SubscriptionStatus(3);
             return false;
         }
 
         uint256 _startingBalance = ERC20(_tokenAddress).balanceOf(_publisher);
+
         ERC20(_tokenAddress).transferFrom(_subscription.subscriber, _publisher, _subscription.value);
 
         // Check if it worked

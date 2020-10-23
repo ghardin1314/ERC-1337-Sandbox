@@ -395,11 +395,11 @@ contract("Subscription", (accounts) => {
         }
       );
 
-    // approve ERC20 transfer
+      // approve ERC20 transfer
 
-    await coin.approve(contract.address, 10, {from: bob})
+      await coin.approve(contract.address, 10, { from: bob });
 
-    // call subscription
+      // call subscription
       var execSubscription = await contract.executeSubscription(
         bob, // recipient
         1, // value
@@ -413,7 +413,146 @@ contract("Subscription", (accounts) => {
         signedHash
       );
 
-      assert.strictEqual(Boolean(execSubscription), true);
+      assert.strictEqual(parseInt(await coin.balanceOf(alice)), 1);
+    });
+
+    it("Should fail when called before next withdraw", async () => {
+      var ethAddress = "0x0000000000000000000000000000000000000000";
+
+      var meta = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "uint256", "uint256"],
+        [bob, 1, 0, 1761264000]
+      );
+
+      var subscriptionHash = await contract.getSubscriptionHash(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        2, // operation
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta //bytes
+      );
+
+      var signedHash = await bobWallet.signMessage(
+        ethers.utils.arrayify(subscriptionHash)
+      );
+
+      // initiate subscription
+      await contract.executeSubscription(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        2, // operation
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta, //bytes
+        signedHash,
+        {
+          from: bob,
+        }
+      );
+
+      // approve ERC20 transfer
+
+      await coin.approve(contract.address, 10, { from: bob });
+
+      // call subscription
+      var execSubscription = await contract.executeSubscription(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        0, // operation: call
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta, //bytes
+        signedHash
+      );
+
+      var failedSubscription = await contract.executeSubscription(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        0, // operation: call
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta, //bytes
+        signedHash
+      );
+
+      assert.strictEqual(parseInt(await coin.balanceOf(alice)), 1);
+
+    });
+
+    it("Should set to expired if no funds approved", async () => {
+      var ethAddress = "0x0000000000000000000000000000000000000000";
+
+      var meta = web3.eth.abi.encodeParameters(
+        ["address", "uint256", "uint256", "uint256"],
+        [bob, 1, 0, 1761264000]
+      );
+
+      var subscriptionHash = await contract.getSubscriptionHash(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        2, // operation
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta //bytes
+      );
+
+      var signedHash = await bobWallet.signMessage(
+        ethers.utils.arrayify(subscriptionHash)
+      );
+
+      // initiate subscription
+      await contract.executeSubscription(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        2, // operation
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta, //bytes
+        signedHash,
+        {
+          from: bob,
+        }
+      );
+
+      // No approve ERC20 transfer
+
+      // call subscription
+      var failedSubscription = await contract.executeSubscription(
+        bob, // recipient
+        1, // value
+        data, // bytes
+        0, // operation: call
+        0, // txGas
+        0, // dataGas
+        0, // gasPrice
+        ethAddress, // gasToken
+        meta, //bytes
+        signedHash
+      );
+
+
+      assert.strictEqual(parseInt(await coin.balanceOf(alice)), 0);
+
+      // TODO: Check that subscription is set to expire
     });
   });
 });

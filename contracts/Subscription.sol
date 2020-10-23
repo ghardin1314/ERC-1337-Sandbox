@@ -3,6 +3,7 @@ pragma solidity 0.6.12;
 import "./Enum.sol";
 import "./ERC165.sol";
 
+
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -46,7 +47,14 @@ contract Subscription is Enum {
 
     Subscriptions[] public SubscriptionList;
 
-    constructor() public {
+    address private _publisher;
+    address private _master;
+
+    constructor(address publisher, address master) public {
+
+        _publisher = publisher;
+        _master = master;
+
         // Make first subscription object in list invalid
         SubscriptionList.push(Subscriptions(
             address(0),
@@ -72,6 +80,7 @@ contract Subscription is Enum {
     event addressEvent (address add);
     event uintEvent (uint256 a);
     event boolEvent (bool truth);
+    event todoEvent (string todo);
 
     //------------------- Mapping -------------------
 
@@ -156,7 +165,7 @@ contract Subscription is Enum {
         public
         view
         returns (
-            bytes32 subscriptionHash
+            bytes32 
         ) {
             // TODO: Add requirements 
             
@@ -167,7 +176,7 @@ contract Subscription is Enum {
                 recipient, 
                 value, 
                 data, 
-                operation, 
+                // operation, 
                 txGas, 
                 dataGas, 
                 gasPrice, 
@@ -189,7 +198,7 @@ contract Subscription is Enum {
         public
         view
         returns (
-            bytes32 modifyStatusHash
+            bytes32 
         ){
         // TODO
 
@@ -206,7 +215,7 @@ contract Subscription is Enum {
                 SubscriptionList[subscriptionId].subscriber, 
                 SubscriptionList[subscriptionId].value, 
                 SubscriptionList[subscriptionId].data, 
-                SubscriptionList[subscriptionId].operation, 
+                // SubscriptionList[subscriptionId].operation, 
                 SubscriptionList[subscriptionId].txGas, 
                 SubscriptionList[subscriptionId].dataGas, 
                 SubscriptionList[subscriptionId].gasPrice, 
@@ -239,7 +248,7 @@ contract Subscription is Enum {
 
         bytes32 modifyStatusHash = getModifyStatusHash(subscriptionHash, status);
 
-        address signer = getSubscriptionSigner(modifyStatusHash, signatures);
+        address signer = _getSubscriptionSigner(modifyStatusHash, signatures);
 
         if(signer != msg.sender) {
             return false;
@@ -251,6 +260,9 @@ contract Subscription is Enum {
         }
         }
 
+
+
+    
     /* @dev returns the hash of cocatenated inputs to the address of the contract holding the logic.,
     * the owner would sign this hash and then provide it to the party for execution at a later date,
     * this could be viewed like a cheque, with the exception that unless you specifically
@@ -284,19 +296,13 @@ contract Subscription is Enum {
             ) {
             // TODO
 
-            // TODO: Unpack dynamic meta array
-            // MetaStruct memory _meta;
-            // (_meta.refundAddress, _meta.period, _meta.offChainID, _meta.expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
-
             // create subscription hash
 
             bytes32 _subHash = getSubscriptionHash(to, value, data, operation, txGas, dataGas, gasPrice, gasToken, meta);
 
             // check for valid signature
 
-            address signer = getSubscriptionSigner(_subHash, signatures);
-
-            // emit addressEvent(signer);
+            address signer = _getSubscriptionSigner(_subHash, signatures);
 
             // If creating subscription
             if (operation == Enum.Operation.Create) {
@@ -310,7 +316,7 @@ contract Subscription is Enum {
                     SubscriptionList.push(Subscriptions(
                             to, 
                             Enum.SubscriptionStatus.ACTIVE, 
-                            Enum.Period(periodFromMeta(meta)), // This should come from meta array 
+                            Enum.Period(_periodFromMeta(meta)), 
                             operation, 
                             value, 
                             txGas, 
@@ -325,40 +331,92 @@ contract Subscription is Enum {
                     emit createdSubscription(to);
 
                     hashToSubscription[_subHash] = SubscriptionList.length - 1;
+                    return true;
                 }
+
+            } else if (operation == Enum.Operation.Call) {
+
+                if (signer != SubscriptionList[hashToSubscription[_subHash]].subscriber ) {
+                    // not a correctly signed meta transaction
+                    return false;
+                }
+
+                // TODO: check for valid timestamp
+
+                return _transferTokens(_subHash);
+
+                emit todoEvent("TODO");
             }
             return true;
         }
 
     //------------------- Private Functions -------------------
 
-    function getSubscriptionSigner(
+    function _getSubscriptionSigner(
         bytes32 subscriptionHash, 
         bytes memory signatures
-        ) private pure
+        ) 
+        internal 
+        pure
         returns (
             address
         )  {
         return subscriptionHash.toEthSignedMessageHash().recover(signatures);
     }
 
-    function refundAddressFromMeta(
+    function _refundAddressFromMeta(
         bytes memory meta
-    ) private pure
-    returns (
-        address
-    ){
-        (address refundAddress, uint256 period, uint256 offChainId, uint256 expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
-        return refundAddress;
+        ) 
+        internal 
+        pure
+        returns (
+            address
+        )  {
+        (address _refundAddress, uint256 _period, uint256 _offChainId, uint256 _expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
+        return _refundAddress;
     }
 
-    function periodFromMeta(
+    function _periodFromMeta(
         bytes memory meta
-    ) private pure
-    returns (
-        uint256
-    ){
-        (address refundAddress, uint256 period, uint256 offChainId, uint256 expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
-        return period;
+        ) 
+        internal 
+        pure
+        returns (
+            uint256
+        ){
+        (address _refundAddress, uint256 _period, uint256 _offChainId, uint256 _expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
+        return _period;
+    }
+
+    function _tokenFromData(
+        bytes memory data
+        ) 
+        internal 
+        pure
+        returns (
+            address
+        ){
+        (address _tokenAddress) = abi.decode(data, (address));
+        return _tokenAddress;
+    }
+
+
+    function _transferTokens(bytes32 _subHash) internal returns (bool) {
+
+        Subscriptions memory _subscription = SubscriptionList[hashToSubscription[_subHash]];
+
+        address _tokenAddress = _tokenFromData(_subscription.data);
+
+        uint256 _startingBalance = ERC20(_tokenAddress).balanceOf(_publisher);
+        ERC20(_tokenAddress).transferFrom(_subscription.subscriber, _publisher, _subscription.value);
+
+        // Check if it worked
+        if (_startingBalance + _subscription.value == ERC20(_tokenAddress).balanceOf(_publisher)) {
+            emit uintEvent(ERC20(_tokenAddress).balanceOf(_publisher));
+            emit uintEvent(ERC20(_tokenAddress).balanceOf(_subscription.subscriber));
+            return true;
+        } else {
+            return false;
+        }
     }
 }

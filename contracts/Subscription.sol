@@ -32,6 +32,7 @@ contract Subscription is Enum {
         uint256 txGas;
         uint256 dataGas;
         uint256 gasPrice;
+        uint256 nextWithdraw;
         address gasToken;
         bytes data;
         bytes meta;
@@ -61,6 +62,7 @@ contract Subscription is Enum {
             Enum.SubscriptionStatus(3),
             Enum.Period(0),
             Enum.Operation(2),
+            0,
             0,
             0,
             0,
@@ -106,9 +108,7 @@ contract Subscription is Enum {
         returns (
             bool success
         ) {
-
             return hashToSubscription[bytes32(subscriptionHash)] != 0;
-
         }
 
     /* @dev returns the value of the subscription
@@ -126,14 +126,9 @@ contract Subscription is Enum {
             uint256 status, 
             uint256 nextWithdraw
         ) {
-            // TODO
-
- 
-            nextWithdraw = 0;
-
             return (
                 uint256(SubscriptionList[hashToSubscription[bytes32(subscriptionHash)]].status), 
-                nextWithdraw
+                SubscriptionList[hashToSubscription[bytes32(subscriptionHash)]].nextWithdraw
                 );
         }
 
@@ -321,7 +316,8 @@ contract Subscription is Enum {
                             value, 
                             txGas, 
                             dataGas, 
-                            gasPrice, 
+                            gasPrice,
+                            block.timestamp, 
                             gasToken, 
                             data, 
                             meta
@@ -342,15 +338,33 @@ contract Subscription is Enum {
                 }
 
                 // TODO: check for valid timestamp
+                if (SubscriptionList[hashToSubscription[_subHash]].nextWithdraw > block.timestamp) {
+                    return false;
+                } else {
+                    _updateTimestamp(_subHash);
+                    return _transferTokens(_subHash);
+                }
 
-                return _transferTokens(_subHash);
-
-                emit todoEvent("TODO");
             }
             return true;
         }
 
     //------------------- Private Functions -------------------
+
+    function _updateTimestamp(bytes32 _subHash) internal {
+        Enum.Period _period = SubscriptionList[hashToSubscription[_subHash]].period;
+
+        if (_period == Enum.Period(0)) {
+            SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(60);
+        } else if (_period == Enum.Period(1)) {
+            SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(86400);
+        } else if (_period == Enum.Period(2)) {
+            SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(604800);
+        } else if (_period == Enum.Period(3)){
+            SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(2592000);
+        }
+        require(SubscriptionList[hashToSubscription[_subHash]].nextWithdraw > block.timestamp, "Failed to update next withdraw");
+    }
 
     function _getSubscriptionSigner(
         bytes32 subscriptionHash, 
@@ -407,13 +421,17 @@ contract Subscription is Enum {
 
         address _tokenAddress = _tokenFromData(_subscription.data);
 
+        if (ERC20(_tokenAddress).allowance(_publisher, address(this)) == 0) {
+            // No allowance left on ERC20 contract so setting to expire
+            SubscriptionList[hashToSubscription[_subHash]].status = Enum.SubscriptionStatus(3);
+            return false;
+        }
+
         uint256 _startingBalance = ERC20(_tokenAddress).balanceOf(_publisher);
         ERC20(_tokenAddress).transferFrom(_subscription.subscriber, _publisher, _subscription.value);
 
         // Check if it worked
         if (_startingBalance + _subscription.value == ERC20(_tokenAddress).balanceOf(_publisher)) {
-            emit uintEvent(ERC20(_tokenAddress).balanceOf(_publisher));
-            emit uintEvent(ERC20(_tokenAddress).balanceOf(_subscription.subscriber));
             return true;
         } else {
             return false;

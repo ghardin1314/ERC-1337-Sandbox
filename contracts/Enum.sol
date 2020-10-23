@@ -19,7 +19,8 @@ contract Enum {
     }
     
     enum Period {
-        INIT,
+        // INIT, change this back for ERC1337
+        MINUTE,
         DAY,
         WEEK,
         MONTH

@@ -24,13 +24,14 @@ function App() {
       context.updateAccounts(accounts);
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Registry.networks[networkId];
+      var deployedNetwork = Registry.networks[networkId];
       let registry = new web3.eth.Contract(
         Registry.abi,
         deployedNetwork && deployedNetwork.address
       );
       context.updateRegistry(registry);
 
+      deployedNetwork = ShitCoin.networks[networkId];
       let shitcoin = new web3.eth.Contract(
         ShitCoin.abi,
         deployedNetwork && deployedNetwork.address

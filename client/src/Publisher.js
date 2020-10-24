@@ -61,6 +61,10 @@ export default function Publisher() {
         arguments: [
           "0x67F7328a30DE1fa2C1fAD75f444CCE93C58C5aA8",
           context.accounts[0],
+          [formState.coin],
+          [formState.period],
+          [formState.value]
+          
         ],
       })
       .send({ from: context.accounts[0] });
@@ -70,7 +74,6 @@ export default function Publisher() {
   return (
     <div>
       <Paper className={classes.paper}>
-        <form onSubmit={handleSubmit}>
           <Grid
             container
             spacing={4}
@@ -89,7 +92,6 @@ export default function Publisher() {
                 </Select>
               </FormControl>
             </Grid>
-
             <Grid item xs={2}>
               <FormControl className={classes.formControl}>
                 <TextField
@@ -123,7 +125,6 @@ export default function Publisher() {
               </FormControl>
             </Grid>
           </Grid>
-        </form>
       </Paper>
     </div>
   );

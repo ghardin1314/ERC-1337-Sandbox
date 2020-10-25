@@ -36,7 +36,7 @@ contract Subscription is Enum {
         address gasToken;
         bytes data;
         bytes meta;
-        // bytes32 subscriptionHash;
+        // bytes signedHash;
     }
 
     struct MetaStruct {
@@ -47,14 +47,22 @@ contract Subscription is Enum {
     }
 
     Subscriptions[] public SubscriptionList;
+    address[] public acceptedCoins;
+    uint256[] public acceptedPeriods; 
+    uint256[] public acceptedValues;
 
     address private _publisher;
     address private _master;
+    uint256 private _masterCut = 5; // Percent
+    // address[] acceptedCoins, uint256[] acceptedPeriods, uint256[] acceptedValues
 
-    constructor(address publisher, address master) public {
+    constructor(address publisher, address master, address[] memory acceptedCoins, uint256[] memory acceptedPeriods, uint256[] memory acceptedValues) public {
 
         _publisher = publisher;
         _master = master;
+        acceptedCoins = acceptedCoins;
+        acceptedPeriods = acceptedPeriods;
+        acceptedValues = acceptedValues;
 
         // Make first subscription object in list invalid
         SubscriptionList.push(Subscriptions(
@@ -70,6 +78,7 @@ contract Subscription is Enum {
             address(0),
             abi.encode(0),
             abi.encode(0)
+            // abi.encode(0)
         ));
     }
 
@@ -131,6 +140,33 @@ contract Subscription is Enum {
                 SubscriptionList[hashToSubscription[bytes32(subscriptionHash)]].nextWithdraw
                 );
         }
+
+
+    function getSubscriptionsForAddress(
+        address subscriber
+    )   public view returns (
+        uint[] memory
+    ) {
+        // doing this to make it a view function
+        uint256 numFound = 0;
+        for(uint i = 0; i < SubscriptionList.length; i++) {
+            if (SubscriptionList[i].subscriber == subscriber ) {
+                numFound++;
+            }
+        }
+
+        uint[] memory ids = new uint[](numFound);
+        uint j = 0;
+
+        for(uint i = 0; i < SubscriptionList.length; i++) {
+            if (SubscriptionList[i].subscriber == subscriber ) {
+                ids[j] = i;
+                j++;
+            }
+        }
+
+        return ids;
+    }   
 
     /* @dev returns the hash of cocatenated inputs to the address of the contract holding the logic.,
     * the owner would sign this hash and then provide it to the party for execution at a later date,
@@ -306,6 +342,10 @@ contract Subscription is Enum {
 
                     return false;
 
+                } else if (hashToSubscription[_subHash] != 0) {
+                    // Subscription has already been created
+                    return false;
+
                 } else {
 
                     SubscriptionList.push(Subscriptions(
@@ -321,6 +361,7 @@ contract Subscription is Enum {
                             gasToken, 
                             data, 
                             meta
+                            // signatures
                         )
                     );
 
@@ -384,7 +425,7 @@ contract Subscription is Enum {
         returns (
             address
         )  {
-        (address _refundAddress, uint256 _period, uint256 _offChainId, uint256 _expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
+        (address _refundAddress, uint256 _period) = abi.decode(meta, (address, uint256));
         return _refundAddress;
     }
 
@@ -396,7 +437,7 @@ contract Subscription is Enum {
         returns (
             uint256
         ){
-        (address _refundAddress, uint256 _period, uint256 _offChainId, uint256 _expiration) = abi.decode(meta, (address, uint256, uint256, uint256));
+        (address _refundAddress, uint256 _period) = abi.decode(meta, (address, uint256));
         return _period;
     }
 
@@ -427,10 +468,14 @@ contract Subscription is Enum {
 
         uint256 _startingBalance = ERC20(_tokenAddress).balanceOf(_publisher);
 
-        ERC20(_tokenAddress).transferFrom(_subscription.subscriber, _publisher, _subscription.value);
+        uint256 _toMaster = _subscription.value.mul(_masterCut).div(100);
+
+        ERC20(_tokenAddress).transferFrom(_subscription.subscriber, _publisher, _subscription.value.sub(_toMaster));
+
+        ERC20(_tokenAddress).transferFrom(_subscription.subscriber, _master, _toMaster);
 
         // Check if it worked
-        if (_startingBalance + _subscription.value == ERC20(_tokenAddress).balanceOf(_publisher)) {
+        if (_startingBalance + _subscription.value.sub(_toMaster)  == ERC20(_tokenAddress).balanceOf(_publisher)) {
             return true;
         } else {
             return false;

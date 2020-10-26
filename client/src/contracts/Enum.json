@@ -1,16 +1,16 @@
 {
   "contractName": "Enum",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":\"Enum\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":{\"keccak256\":\"0x61d4f506922992b18a8f5cf3d1ebaf9e36351b34958d7837df79d672f9a8aceb\",\"urls\":[\"bzz-raw://a056e50963a0b7e7e9c743cf751b3ab87fa0610ddf33b55810f9f22fbbe7d90b\",\"dweb:/ipfs/QmSJer1Dxqhga2piK4Fr1brAMJX93wk9c6VpbvBqL6WnrY\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212204213327a9fb5e2df011c674a6dfb3c3408fb26679f793445c32183a7feec0fe164736f6c634300060c0033",
-  "deployedBytecode": "0x6080604052600080fdfea26469706673582212204213327a9fb5e2df011c674a6dfb3c3408fb26679f793445c32183a7feec0fe164736f6c634300060c0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":\"Enum\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":{\"keccak256\":\"0x61d4f506922992b18a8f5cf3d1ebaf9e36351b34958d7837df79d672f9a8aceb\",\"urls\":[\"bzz-raw://a056e50963a0b7e7e9c743cf751b3ab87fa0610ddf33b55810f9f22fbbe7d90b\",\"dweb:/ipfs/QmSJer1Dxqhga2piK4Fr1brAMJX93wk9c6VpbvBqL6WnrY\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220f4cfbdd1811b83c450d87d9fc6c9008b9d2d763bacec54627cafbbfed3ccc9a064736f6c634300060c0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220f4cfbdd1811b83c450d87d9fc6c9008b9d2d763bacec54627cafbbfed3ccc9a064736f6c634300060c0033",
   "immutableReferences": {},
   "sourceMap": "163:396:1:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "163:396:1:-:0;;;;;",
   "source": "/// @title Enum - Collection of enums\r\n/// Original concept from Richard Meissner - <richard@gnosis.pm> Gnosis safe contracts\r\npragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Enum {\r\n    enum Operation {\r\n        Call,\r\n        DelegateCall,\r\n        Create,\r\n        ERC20, \r\n        ERC20Approve\r\n    }\r\n    \r\n    enum SubscriptionStatus {\r\n        ACTIVE,\r\n        PAUSED,\r\n        CANCELLED,\r\n        EXPIRED\r\n    }\r\n    \r\n    enum Period {\r\n        // INIT, change this back for ERC1337\r\n        MINUTE,\r\n        DAY,\r\n        WEEK,\r\n        MONTH\r\n    }\r\n}",
-  "sourcePath": "/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
+  "sourcePath": "C:\\Users\\ghard\\Documents\\GitHub\\ERC-1337-Sandbox\\contracts\\Enum.sol",
   "ast": {
-    "absolutePath": "/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
+    "absolutePath": "/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
     "exportedSymbols": {
       "Enum": [
         29
@@ -161,7 +161,7 @@
     "src": "127:432:1"
   },
   "legacyAST": {
-    "absolutePath": "/mnt/c/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
+    "absolutePath": "/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
     "exportedSymbols": {
       "Enum": [
         29
@@ -317,7 +317,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-23T05:01:12.603Z",
+  "updatedAt": "2020-10-25T22:18:24.443Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

@@ -47,22 +47,22 @@ contract Subscription is Enum {
     }
 
     Subscriptions[] public SubscriptionList;
-    address[] public acceptedCoins;
-    uint256[] public acceptedPeriods; 
-    uint256[] public acceptedValues;
+    address public acceptedCoins;
+    uint256 public acceptedPeriods; 
+    uint256 public acceptedValues;
 
     address private _publisher;
     address private _master;
     uint256 private _masterCut = 5; // Percent
     // address[] acceptedCoins, uint256[] acceptedPeriods, uint256[] acceptedValues
 
-    constructor(address publisher, address master, address[] memory acceptedCoins, uint256[] memory acceptedPeriods, uint256[] memory acceptedValues) public {
+    constructor(address publisher, address master, address _acceptedCoins, uint256 _acceptedPeriods, uint256 _acceptedValues) public {
 
         _publisher = publisher;
         _master = master;
-        acceptedCoins = acceptedCoins;
-        acceptedPeriods = acceptedPeriods;
-        acceptedValues = acceptedValues;
+        acceptedCoins = _acceptedCoins;
+        acceptedPeriods = _acceptedPeriods;
+        acceptedValues = _acceptedValues;
 
         // Make first subscription object in list invalid
         SubscriptionList.push(Subscriptions(
@@ -80,12 +80,17 @@ contract Subscription is Enum {
             abi.encode(0)
             // abi.encode(0)
         ));
+
+        emit createdSubscription(_acceptedCoins, _acceptedValues);
+        emit createdSubscription(acceptedCoins, acceptedValues);
+
     }
 
     //------------------- Events -------------------
 
     event Received (address indexed sender, uint value);
-    event createdSubscription(address to);
+    event newSubscription(address to);
+    event createdSubscription(address acceptedCoins, uint256 acceptedValues);
 
 
     event addressEvent (address add);
@@ -104,6 +109,17 @@ contract Subscription is Enum {
 
     mapping(bytes32 => uint256) public hashToSubscription;
     //------------------- Public View Functions -------------------
+    function getSubscriberListLength() public view returns (uint256) {
+        return SubscriptionList.length;
+    }
+
+    // function getAcceptedCoins() public view returns (address[] memory) {
+    //     return acceptedCoins;
+    // }
+    // function getAcceptedValues() public view returns (uint256[] memory) {
+    //     return acceptedValues;
+    // }
+
 
     /* @dev Checks if the subscription is valid.
     * @param subscriptionHash is the identifier of the customer's subscription with its relevant details.
@@ -365,7 +381,7 @@ contract Subscription is Enum {
                         )
                     );
 
-                    emit createdSubscription(to);
+                    emit newSubscription(to);
 
                     hashToSubscription[_subHash] = SubscriptionList.length - 1;
                     return true;

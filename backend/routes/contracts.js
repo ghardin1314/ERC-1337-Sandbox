@@ -13,9 +13,6 @@ router
 
     var publisher = await Publisher.find({ _id: req.body.publisher }).exec();
 
-    console.log(publisher);
-    console.log(publisher.length);
-
     if ((publisher.length === 0)) {
       try {
         await Publisher.create({ _id: req.body.publisher });

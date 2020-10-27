@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-
+var cors = require('cors')
 // base
 
 var mongoose = require("mongoose");
@@ -15,6 +15,7 @@ var publishers = require("./routes/publishers.js")
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors())
 
 var port = process.env.PORT || 8080;
 

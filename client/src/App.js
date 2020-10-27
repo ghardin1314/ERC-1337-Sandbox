@@ -9,19 +9,25 @@ import BaseRouter from "./routes";
 
 function App() {
   const context = useContext(MyContext);
+  var state = context.state
+  var setState = context.setState
 
   useEffect(() => {
     initWeb3();
+    // eslint-disable-next-line
   }, []);
 
   async function initWeb3() {
     try {
       // Get network provider and web3 instance.
       let web3 = await getWeb3();
-      context.updateWeb3(web3);
+      console.log(web3)
+      // await setState({...state, web3});
       // Use web3 to get the user's accounts.
       let accounts = await web3.eth.getAccounts();
-      context.updateAccounts(accounts);
+      // await setState({...state, accounts});
+      // context.setState({...context.state, accounts});
+      // context.updateAccounts(accounts);
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       var deployedNetwork = Registry.networks[networkId];
@@ -29,16 +35,20 @@ function App() {
         Registry.abi,
         deployedNetwork && deployedNetwork.address
       );
-      context.updateRegistry(registry);
+      // context.updateRegistry(registry);
+      console.log(registry)
+      // context.setState({...context.state, registry});
 
       deployedNetwork = ShitCoin.networks[networkId];
       let shitcoin = new web3.eth.Contract(
         ShitCoin.abi,
         deployedNetwork && deployedNetwork.address
       );
-      context.updateShitcoin(shitcoin);
+      // context.updateShitcoin(shitcoin);
+      // context.setState({...context.state, shitcoin});
 
       console.log(shitcoin._address);
+      setState({...state, web3, accounts, shitcoin, registry})
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -52,7 +62,7 @@ function App() {
     }
   }
 
-  if (!context.web3) {
+  if (!state.web3) {
     return <div>Loading Web3, accounts, and contract...</div>;
   }
   return (

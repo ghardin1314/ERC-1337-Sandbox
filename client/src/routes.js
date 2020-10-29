@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 
 import Landing from "./Landing";
 import Publisher from "./publisher/Publisher";
-import Subscriber from "./Subscriber";
+import Subscriber from "./subscriber/Subscriber";
 
 const BaseRouter = () => (
     <Switch>

@@ -1,22 +1,22 @@
 {
   "contractName": "Enum",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":\"Enum\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":{\"keccak256\":\"0x61d4f506922992b18a8f5cf3d1ebaf9e36351b34958d7837df79d672f9a8aceb\",\"urls\":[\"bzz-raw://a056e50963a0b7e7e9c743cf751b3ab87fa0610ddf33b55810f9f22fbbe7d90b\",\"dweb:/ipfs/QmSJer1Dxqhga2piK4Fr1brAMJX93wk9c6VpbvBqL6WnrY\"]}},\"version\":1}",
-  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220f4cfbdd1811b83c450d87d9fc6c9008b9d2d763bacec54627cafbbfed3ccc9a064736f6c634300060c0033",
-  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220f4cfbdd1811b83c450d87d9fc6c9008b9d2d763bacec54627cafbbfed3ccc9a064736f6c634300060c0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":\"Enum\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol\":{\"keccak256\":\"0x1c29116dafa032d887a4d886fb3d8e6390a3e700d8ebb0024143da8dbc93853e\",\"urls\":[\"bzz-raw://94b1b04fcf1e3d43517ff89470063f646894b4c2c739f6c74646a368b427eb0f\",\"dweb:/ipfs/QmVEG2f1pn1ViTmhVYX2UGhfhLKHyaL57BpJRrkHHkJiyS\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220636a26762d39d2d65659659ecc9f62efc7db257d028802a37c8094a8cf212bb764736f6c634300060c0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220636a26762d39d2d65659659ecc9f62efc7db257d028802a37c8094a8cf212bb764736f6c634300060c0033",
   "immutableReferences": {},
-  "sourceMap": "163:396:1:-:0;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "163:396:1:-:0;;;;;",
-  "source": "/// @title Enum - Collection of enums\r\n/// Original concept from Richard Meissner - <richard@gnosis.pm> Gnosis safe contracts\r\npragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Enum {\r\n    enum Operation {\r\n        Call,\r\n        DelegateCall,\r\n        Create,\r\n        ERC20, \r\n        ERC20Approve\r\n    }\r\n    \r\n    enum SubscriptionStatus {\r\n        ACTIVE,\r\n        PAUSED,\r\n        CANCELLED,\r\n        EXPIRED\r\n    }\r\n    \r\n    enum Period {\r\n        // INIT, change this back for ERC1337\r\n        MINUTE,\r\n        DAY,\r\n        WEEK,\r\n        MONTH\r\n    }\r\n}",
+  "sourceMap": "163:413:1:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "163:413:1:-:0;;;;;",
+  "source": "/// @title Enum - Collection of enums\r\n/// Original concept from Richard Meissner - <richard@gnosis.pm> Gnosis safe contracts\r\npragma solidity >=0.4.21 <0.7.0;\r\n\r\ncontract Enum {\r\n    enum Operation {\r\n        Call,\r\n        DelegateCall,\r\n        Create,\r\n        ERC20, \r\n        ERC20Approve\r\n    }\r\n    \r\n    enum SubscriptionStatus {\r\n        ACTIVE,\r\n        PAUSED,\r\n        CANCELLED,\r\n        EXPIRED\r\n    }\r\n    \r\n    enum Period {\r\n        // INIT, change this back for ERC1337\r\n        MINUTE,\r\n        DAY,\r\n        WEEK,\r\n        MONTH,\r\n        SECOND\r\n    }\r\n}",
   "sourcePath": "C:\\Users\\ghard\\Documents\\GitHub\\ERC-1337-Sandbox\\contracts\\Enum.sol",
   "ast": {
     "absolutePath": "/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
     "exportedSymbols": {
       "Enum": [
-        29
+        30
       ]
     },
-    "id": 30,
+    "id": 31,
     "license": null,
     "nodeType": "SourceUnit",
     "nodes": [
@@ -41,9 +41,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 29,
+        "id": 30,
         "linearizedBaseContracts": [
-          29
+          30
         ],
         "name": "Enum",
         "nodeType": "ContractDefinition",
@@ -122,7 +122,7 @@
           },
           {
             "canonicalName": "Enum.Period",
-            "id": 28,
+            "id": 29,
             "members": [
               {
                 "id": 24,
@@ -147,27 +147,33 @@
                 "name": "MONTH",
                 "nodeType": "EnumValue",
                 "src": "544:5:1"
+              },
+              {
+                "id": 28,
+                "name": "SECOND",
+                "nodeType": "EnumValue",
+                "src": "560:6:1"
               }
             ],
             "name": "Period",
             "nodeType": "EnumDefinition",
-            "src": "428:128:1"
+            "src": "428:145:1"
           }
         ],
-        "scope": 30,
-        "src": "163:396:1"
+        "scope": 31,
+        "src": "163:413:1"
       }
     ],
-    "src": "127:432:1"
+    "src": "127:449:1"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/ghard/Documents/GitHub/ERC-1337-Sandbox/contracts/Enum.sol",
     "exportedSymbols": {
       "Enum": [
-        29
+        30
       ]
     },
-    "id": 30,
+    "id": 31,
     "license": null,
     "nodeType": "SourceUnit",
     "nodes": [
@@ -192,9 +198,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 29,
+        "id": 30,
         "linearizedBaseContracts": [
-          29
+          30
         ],
         "name": "Enum",
         "nodeType": "ContractDefinition",
@@ -273,7 +279,7 @@
           },
           {
             "canonicalName": "Enum.Period",
-            "id": 28,
+            "id": 29,
             "members": [
               {
                 "id": 24,
@@ -298,18 +304,24 @@
                 "name": "MONTH",
                 "nodeType": "EnumValue",
                 "src": "544:5:1"
+              },
+              {
+                "id": 28,
+                "name": "SECOND",
+                "nodeType": "EnumValue",
+                "src": "560:6:1"
               }
             ],
             "name": "Period",
             "nodeType": "EnumDefinition",
-            "src": "428:128:1"
+            "src": "428:145:1"
           }
         ],
-        "scope": 30,
-        "src": "163:396:1"
+        "scope": 31,
+        "src": "163:413:1"
       }
     ],
-    "src": "127:432:1"
+    "src": "127:449:1"
   },
   "compiler": {
     "name": "solc",
@@ -317,7 +329,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-10-27T02:56:13.478Z",
+  "updatedAt": "2020-10-29T04:11:04.077Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

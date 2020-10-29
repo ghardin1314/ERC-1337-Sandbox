@@ -50,10 +50,9 @@ export default function ContractForm() {
     period: null,
     value: null,
   });
-  
+
   function handleChange(event) {
     setFormState({ ...formState, [event.target.name]: event.target.value });
-    console.log(formState);
   }
 
   async function handleSubmit() {
@@ -126,6 +125,7 @@ export default function ContractForm() {
                 <MenuItem value={1}> Day </MenuItem>
                 <MenuItem value={2}> Week </MenuItem>
                 <MenuItem value={3}> Month </MenuItem>
+                <MenuItem value={4}> Second </MenuItem>
               </Select>
             </FormControl>
           </Grid>

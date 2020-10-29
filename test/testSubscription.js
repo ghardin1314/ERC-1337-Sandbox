@@ -62,7 +62,7 @@ contract("Subscription", (accounts) => {
         [bob, 1, 0, 1761264000]
       );
 
-      var subscriptionHash = await contract.getSubscriptionHash(
+      var subscriptionHash = contract.getSubscriptionHash(
         bob, // recipient
         1, // value
         data, // bytes

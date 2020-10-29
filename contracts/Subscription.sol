@@ -51,7 +51,7 @@ contract Subscription is Enum {
     uint256 public acceptedPeriods; 
     uint256 public acceptedValues;
 
-    address private _publisher;
+    address public _publisher;
     address private _master;
     uint256 private _masterCut = 5; // Percent
     // address[] acceptedCoins, uint256[] acceptedPeriods, uint256[] acceptedValues
@@ -351,15 +351,20 @@ contract Subscription is Enum {
 
             address signer = _getSubscriptionSigner(_subHash, signatures);
 
+            emit addressEvent(signer);
+
             // If creating subscription
             if (operation == Enum.Operation.Create) {
                 // Subscriber must initialize their own subscription
-                if (signer != msg.sender) {
+                // if (signer != msg.sender) {
+                    
+                //     emit stringEvent("Didn't match signature");
+                //     return false;
 
-                    return false;
-
-                } else if (hashToSubscription[_subHash] != 0) {
+                // } else 
+                if (hashToSubscription[_subHash] != 0) {
                     // Subscription has already been created
+                    emit stringEvent("Repeat Subscription");
                     return false;
 
                 } else {
@@ -417,6 +422,8 @@ contract Subscription is Enum {
             SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(604800);
         } else if (_period == Enum.Period(3)){
             SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(2592000);
+        } else if (_period == Enum.Period(4)){
+            SubscriptionList[hashToSubscription[_subHash]].nextWithdraw = block.timestamp.add(1);
         }
         require(SubscriptionList[hashToSubscription[_subHash]].nextWithdraw > block.timestamp, "Failed to update next withdraw");
     }

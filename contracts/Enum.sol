@@ -23,6 +23,7 @@ contract Enum {
         MINUTE,
         DAY,
         WEEK,
-        MONTH
+        MONTH,
+        SECOND
     }
 }

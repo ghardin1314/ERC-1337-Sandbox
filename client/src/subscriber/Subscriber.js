@@ -1,10 +1,9 @@
 import React from "react";
 
-import ContractForm from "./contractForm";
-import ContractsTable from "./ContractsTable";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+
+import SubsTable from "./SubsTable";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,11 +19,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justify: "center",
     alignItems: "center",
-    margin: 16
+    margin: 16,
   },
 }));
 
-export default function Publisher() {
+export default function Subscriber() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -35,10 +34,7 @@ export default function Publisher() {
         className={classes.container}
       >
         <Grid item xs={10}>
-          <ContractsTable />
-        </Grid>
-        <Grid item xs={8}>
-          <ContractForm />
+          <SubsTable />
         </Grid>
       </Grid>
     </div>

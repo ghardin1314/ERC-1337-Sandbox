@@ -14,6 +14,7 @@ var publishers = require("./routes/publishers.js");
 var subscribe = require("./routes/subscribe.js");
 var mint = require("./routes/mint.js");
 var deploy = require("./routes/deploy.js");
+var permit = require("./routes/permit.js");
 // config
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -44,6 +45,7 @@ app.use("/publishers", publishers);
 app.use("/subscribe", subscribe);
 app.use("/mint", mint);
 app.use("/deploy", deploy);
+app.use("/permit", permit);
 
 // Start
 

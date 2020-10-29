@@ -19,6 +19,7 @@ export default function ContractsTable() {
   const setState = context.setState;
   const contracts = state.contracts;
   const coinDict = state.coinDict;
+  const periodDict = state.periodDict;
 
   const [page, setPage] = useState(0);
 
@@ -84,34 +85,34 @@ export default function ContractsTable() {
   const rowsPerPage = 5;
 
   return (
-    <React.Fragment>
+    <Paper>
       <Table>
-        <TableContainer component={Paper}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Address</TableCell>
-              <TableCell>Income per period</TableCell>
-              <TableCell>Period Length</TableCell>
-              <TableCell>Income Coin</TableCell>
-              <TableCell>Active Subscribers</TableCell>
-              <TableCell>Total Subscribers</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {contracts
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((contract) => (
-                <TableRow key={contract.address}>
-                  <TableCell>{contract.address}</TableCell>
-                  <TableCell>{contract.periodValue}</TableCell>
-                  <TableCell>{contract.period}</TableCell>
-                  <TableCell>{coinDict[contract.coin]}</TableCell>
-                  <TableCell>{contract.activeSubs}</TableCell>
-                  <TableCell>{contract.totalSubs}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </TableContainer>
+        <TableHead>
+          <TableRow>
+            <TableCell>Address</TableCell>
+            <TableCell>Income per period</TableCell>
+            <TableCell>Period Length</TableCell>
+            <TableCell>Income Coin</TableCell>
+            <TableCell>Active Subscribers</TableCell>
+            <TableCell>Total Subscribers</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {contracts
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((contract, i) => (
+              <TableRow key={i}>
+                <TableCell component="th" scope="row">
+                  {contract.address}
+                </TableCell>
+                <TableCell>{contract.periodValue}</TableCell>
+                <TableCell>{periodDict[contract.period]}</TableCell>
+                <TableCell>{coinDict[contract.coin]}</TableCell>
+                <TableCell>{contract.activeSubs}</TableCell>
+                <TableCell>{contract.totalSubs}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
       </Table>
       <TablePagination
         rowsPerPageOptions={[5]}
@@ -121,6 +122,6 @@ export default function ContractsTable() {
         page={page}
         onChangePage={handleChangePage}
       />
-    </React.Fragment>
+    </Paper>
   );
 }

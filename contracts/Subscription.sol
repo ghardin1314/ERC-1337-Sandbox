@@ -36,7 +36,8 @@ contract Subscription is Enum {
         address gasToken;
         bytes data;
         bytes meta;
-        // bytes signedHash;
+        bytes rawHash;
+        bytes signedHash;
     }
 
     struct MetaStruct {
@@ -77,8 +78,9 @@ contract Subscription is Enum {
             0,
             address(0),
             abi.encode(0),
+            abi.encode(0),
+            abi.encode(0),
             abi.encode(0)
-            // abi.encode(0)
         ));
 
         emit createdSubscription(_acceptedCoins, _acceptedValues);
@@ -108,6 +110,7 @@ contract Subscription is Enum {
     mapping(bytes32 => bool) public publisherSigned;
 
     mapping(bytes32 => uint256) public hashToSubscription;
+    mapping(bytes32 => uint256) public SignedHashToSubscription;
     //------------------- Public View Functions -------------------
     function getSubscriberListLength() public view returns (uint256) {
         return SubscriptionList.length;
@@ -381,14 +384,16 @@ contract Subscription is Enum {
                             block.timestamp - 1, 
                             gasToken, 
                             data, 
-                            meta
-                            // signatures
+                            meta,
+                            _subHash,
+                            signatures
                         )
                     );
 
                     emit newSubscription(to);
 
                     hashToSubscription[_subHash] = SubscriptionList.length - 1;
+                    signedHashToSubscription[signatures] = SubscriptionList.length - 1;
                     return true;
                 }
 
@@ -408,6 +413,17 @@ contract Subscription is Enum {
                 }
             }
         }
+
+    function executeFromSignature(
+            bytes memory signatures
+            )
+            public 
+            returns (
+                bool success
+            ) {
+                SubscriptionList[hashToSubscription[_subHash]].subscriber
+                address signer = _getSubscriptionSigner(_subHash, signatures);
+            }
 
     //------------------- Private Functions -------------------
 

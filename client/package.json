@@ -7,6 +7,7 @@
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.21.0",
     "clsx": "^1.1.1",
+    "eth-permit": "^0.1.9",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-router-dom": "^5.2.0",

@@ -5,6 +5,7 @@ const MyContext = React.createContext({});
 export const MyProvider = ({children}) => {
 
     var coinDict = {}
+    var periodDict ={}
 
     const [state, setState] = useState({
         web3: null,
@@ -12,7 +13,8 @@ export const MyProvider = ({children}) => {
         registry: null,
         shitcoin: null,
         accounts: null,
-        coinDict: coinDict
+        coinDict: coinDict,
+        periodDict: periodDict
     })
 
 

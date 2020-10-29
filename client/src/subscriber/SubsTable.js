@@ -13,6 +13,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 
 import MyContext from "../MyContext";
 import Subscription, { abi, bytecode } from "../contracts/Subscription.json";
+import { signDaiPermit } from "eth-permit";
 
 export default function SubsTable() {
   const context = useContext(MyContext);
@@ -22,6 +23,7 @@ export default function SubsTable() {
   const coinDict = state.coinDict;
   const ShitCoin = state.shitcoin;
   const web3 = state.web3;
+  const periodDict = state.periodDict;
 
   const [page, setPage] = useState(0);
 
@@ -68,6 +70,22 @@ export default function SubsTable() {
   async function handleSubscribe(i) {
     var contract = contracts[i];
     var coin = contract.coin;
+
+    console.log("signing");
+
+    const result = await signDaiPermit(
+      window.ethereum,
+      state.shitcoin._address,
+      state.accounts[0],
+      contract.address
+    );
+
+    axios.post(`http://localhost:8080/permit/`, {
+      result,
+      spender: contract.address,
+      owner: state.accounts[0],
+    });
+
     // await ShitCoin.methods
     //   .approve(contract.address, -1)
     //   .send({ from: state.accounts[0] });
@@ -110,65 +128,50 @@ export default function SubsTable() {
       meta,
     ];
 
-    // var execSubscription = await instance.methods
-    //   .executeSubscription(
-    //     state.accounts[0],
-    //     contract.value,
-    //     data, // bytes
-    //     2, // operation
-    //     0, // txGas
-    //     0, // dataGas
-    //     0, // gasPrice
-    //     ethAddress, // gasToken
-    //     meta, //bytes
-    //     signedHash
-    //   )
-    //   .send({ from: state.accounts[0] });
-
     axios.post(`http://localhost:8080/subscribe/`, {
       hash: signedHash,
       data: sendData,
-      contract: contracts[i].address
+      contract: contracts[i].address,
     });
   }
 
   const rowsPerPage = 5;
 
   return (
-    <td>
+    <Paper>
       <Table>
-        <TableContainer component={Paper}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Publisher</TableCell>
-              <TableCell>Cost per Period</TableCell>
-              <TableCell>Period Length</TableCell>
-              <TableCell>Currency</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {contracts
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((contract, i) => (
-                <TableRow key={contract.publisher}>
-                  <TableCell>{contract.publisher}</TableCell>
-                  <TableCell>{contract.value}</TableCell>
-                  <TableCell>{contract.period}</TableCell>
-                  <TableCell>{coinDict[contract.coin]}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleSubscribe(i)}
-                    >
-                      Subscribe
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </TableContainer>
+        <TableHead>
+          <TableRow>
+            <TableCell>Publisher</TableCell>
+            <TableCell>Cost per Period</TableCell>
+            <TableCell>Period Length</TableCell>
+            <TableCell>Currency</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {contracts
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((contract, i) => (
+              <TableRow key={i}>
+                <TableCell component="th" scope="row">
+                  {contract.publisher}
+                </TableCell>
+                <TableCell>{contract.value}</TableCell>
+                <TableCell>{periodDict[contract.period]}</TableCell>
+                <TableCell>{coinDict[contract.coin]}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleSubscribe(i)}
+                  >
+                    Subscribe
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
       </Table>
       <TablePagination
         rowsPerPageOptions={[5]}
@@ -178,6 +181,6 @@ export default function SubsTable() {
         page={page}
         onChangePage={handleChangePage}
       />
-    </td>
+    </Paper>
   );
 }

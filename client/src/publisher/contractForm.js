@@ -46,9 +46,9 @@ export default function ContractForm() {
   const shitcoin = context.state.shitcoin;
   const classes = useStyles();
   const [formState, setFormState] = useState({
-    coin: null,
-    period: null,
-    value: null,
+    coin: "",
+    period: "",
+    value: "",
   });
 
   function handleChange(event) {
@@ -68,18 +68,6 @@ export default function ContractForm() {
         parseInt(formState.value),
       ];
       let res = await axios.post("http://localhost:8080/deploy", { args });
-      // let res = await contract
-      //   .deploy({
-      //     data: bytecode,
-      //     arguments: [
-      //       "0x67F7328a30DE1fa2C1fAD75f444CCE93C58C5aA8",
-      //       context.state.accounts[0],
-      //       formState.coin,
-      //       parseInt(formState.period),
-      //       parseInt(formState.value),
-      //     ],
-      //   })
-      //   .send({ from: context.state.accounts[0] });
 
       console.log(res);
 
@@ -89,7 +77,7 @@ export default function ContractForm() {
           publisher: context.state.accounts[0],
         })
         .then((res) => {
-          console.log(res);
+          setState(state);
         })
         .catch((err) => {
           console.log(err);
@@ -112,7 +100,12 @@ export default function ContractForm() {
           <Grid item xs={3}>
             <FormControl className={classes.formControl}>
               <InputLabel>Coin</InputLabel>
-              <Select name="coin" onChange={handleChange}>
+              <Select
+                name="coin"
+                value={formState.coin}
+                onChange={handleChange}
+              >
+                <MenuItem selected disabled value=""></MenuItem>
                 {shitcoin ? (
                   <MenuItem value={shitcoin._address}>ShitCoin</MenuItem>
                 ) : null}
@@ -127,7 +120,12 @@ export default function ContractForm() {
           <Grid item xs={3}>
             <FormControl className={classes.formControl}>
               <InputLabel>Period</InputLabel>
-              <Select onChange={handleChange} name="period">
+              <Select
+                onChange={handleChange}
+                name="period"
+                value={formState.period}
+              >
+                <MenuItem selected disabled value=""></MenuItem>
                 <MenuItem value={0}> Minute </MenuItem>
                 <MenuItem value={1}> Day </MenuItem>
                 <MenuItem value={2}> Week </MenuItem>

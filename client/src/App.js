@@ -46,8 +46,14 @@ function App() {
       );
 
       var coinDict = state.coinDict;
+      var periodDict = state.periodDict;
 
       coinDict[shitcoin._address] = "ShitCoin";
+      periodDict[0] = "Minute"
+      periodDict[1] = "Day"
+      periodDict[2] = "Week"
+      periodDict[3] = "Month"
+      periodDict[4] = "Second"
       setState({ ...state, web3, accounts, shitcoin, registry, coinDict });
 
       // window.ethereum.on("accountsChanged", async () => {

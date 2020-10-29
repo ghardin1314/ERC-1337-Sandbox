@@ -41,6 +41,7 @@ export default function MyDrawer() {
   const classes = useStyles();
   const context = useContext(MyContext);
   const state = context.state;
+  var setState = context.setState;
   const web3 = state.web3;
   const shitcoin = state.shitcoin;
 
@@ -54,13 +55,16 @@ export default function MyDrawer() {
       var ethbal = await web3.eth.getBalance(state.accounts[0]);
       ethbal = parseFloat(web3.utils.fromWei(web3.utils.toBN(ethbal)));
       setEthBal(ethbal.toFixed(4));
+      let accounts = await web3.eth.getAccounts();
+      state.accounts = accounts
+      setState({ ...state, accounts });
     }, 1000);
   }
 
   function mintTokens() {
     axios.post("http://localhost:8080/mint", {
       account: state.accounts[0],
-      coin: shitcoin._address
+      coin: shitcoin._address,
     });
     // shitcoin.methods
     //   .mintTokens(state.accounts[0])

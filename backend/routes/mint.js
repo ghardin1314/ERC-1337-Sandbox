@@ -6,10 +6,6 @@ require("dotenv").config();
 
 const ShitCoin = require("../../client/src/contracts/ShitCoin.json");
 
-// const contract = JSON.parse(
-//   fs.readFileSync("../client/src/contracts/ShitCoin.json")
-// );
-// const abi = JSON.stringify(contract.abi);
 const address = process.env.ACCOUNT;
 const privateKey = process.env.PRIVATE_KEY;
 var instance = null;

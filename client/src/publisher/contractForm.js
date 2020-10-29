@@ -61,24 +61,31 @@ export default function ContractForm() {
       from: state.accounts[0],
     });
     try {
-      let res = await contract
-        .deploy({
-          data: bytecode,
-          arguments: [
-            "0x67F7328a30DE1fa2C1fAD75f444CCE93C58C5aA8",
-            context.state.accounts[0],
-            formState.coin,
-            parseInt(formState.period),
-            parseInt(formState.value),
-          ],
-        })
-        .send({ from: context.state.accounts[0] });
+      var args = [
+        context.state.accounts[0],
+        formState.coin,
+        parseInt(formState.period),
+        parseInt(formState.value),
+      ];
+      let res = await axios.post("http://localhost:8080/deploy", { args });
+      // let res = await contract
+      //   .deploy({
+      //     data: bytecode,
+      //     arguments: [
+      //       "0x67F7328a30DE1fa2C1fAD75f444CCE93C58C5aA8",
+      //       context.state.accounts[0],
+      //       formState.coin,
+      //       parseInt(formState.period),
+      //       parseInt(formState.value),
+      //     ],
+      //   })
+      //   .send({ from: context.state.accounts[0] });
 
       console.log(res);
 
       axios
         .post("http://localhost:8080/contracts", {
-          address: res._address,
+          address: res.data,
           publisher: context.state.accounts[0],
         })
         .then((res) => {

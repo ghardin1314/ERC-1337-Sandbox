@@ -13,6 +13,7 @@ var contracts = require("./routes/contracts.js");
 var publishers = require("./routes/publishers.js");
 var subscribe = require("./routes/subscribe.js");
 var mint = require("./routes/mint.js");
+var deploy = require("./routes/deploy.js");
 // config
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,6 +43,7 @@ app.use("/contracts", contracts);
 app.use("/publishers", publishers);
 app.use("/subscribe", subscribe);
 app.use("/mint", mint);
+app.use("/deploy", deploy);
 
 // Start
 

@@ -48,8 +48,14 @@ function App() {
       var coinDict = state.coinDict;
 
       coinDict[shitcoin._address] = "ShitCoin";
-
       setState({ ...state, web3, accounts, shitcoin, registry, coinDict });
+
+      // window.ethereum.on("accountsChanged", async () => {
+      //   console.log("accountchanged");
+      //   var accounts = await web3.eth.getAccounts();
+      //   setState({ ...state, accounts });
+      // });
+
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(

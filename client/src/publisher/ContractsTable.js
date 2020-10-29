@@ -29,8 +29,7 @@ export default function ContractsTable() {
 
   useEffect(() => {
     populateContracts();
-    // eslint-disable-next-line
-  }, [state.contracts]);
+  }, [state.accounts]);
 
   async function populateContracts() {
     axios
@@ -41,7 +40,7 @@ export default function ContractsTable() {
         }
       )
       .then(async (res) => {
-        let contracts = res.data;
+        var myContracts = res.data;
         let sub;
         let instance;
         let activeSubs;
@@ -49,27 +48,29 @@ export default function ContractsTable() {
 
         // Check all this
 
-        for (var i = 0; i < contracts.length; i++) {
+        for (var i = 0; i < myContracts.length; i++) {
           activeSubs = 0;
           periodValue = 0;
-          instance = new state.web3.eth.Contract(abi, contracts[i].address);
+          instance = new state.web3.eth.Contract(abi, myContracts[i].address);
           //   console.log(instance);
-          contracts[i].totalSubs =
+          myContracts[i].totalSubs =
             (await instance.methods.getSubscriberListLength().call()) - 1;
-          contracts[i].period = await instance.methods.acceptedPeriods().call();
-          contracts[i].coin = await instance.methods.acceptedCoins().call();
-          for (var j = 1; j < contracts[i].totalSubs + 1; j++) {
+          myContracts[
+            i
+          ].period = await instance.methods.acceptedPeriods().call();
+          myContracts[i].coin = await instance.methods.acceptedCoins().call();
+          for (var j = 1; j < myContracts[i].totalSubs + 1; j++) {
             sub = await instance.methods.SubscriptionList(j).call();
             if (sub.status === "0") {
               activeSubs++;
               periodValue = periodValue + parseFloat(sub.value);
             }
           }
-          contracts[i].activeSubs = activeSubs;
-          contracts[i].periodValue = periodValue;
+          myContracts[i].activeSubs = activeSubs;
+          myContracts[i].periodValue = periodValue;
         }
 
-        setState({ ...state, contracts });
+        setState({ ...state, contracts: myContracts });
       })
       .catch((err) => {
         console.log(err);

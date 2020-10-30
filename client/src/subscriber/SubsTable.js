@@ -90,59 +90,26 @@ export default function SubsTable() {
 
     const res = await signTransferPermit(web3, message, coin);
 
-    console.log(res);
-
-    
-
-    console.log(instance);
-
-    await instance.methods
-      .permit(
-        state.accounts[0],
-        contract.address,
-        message.nonce,
-        message.expiry,
-        message.allowed,
-        res.v,
-        res.r,
-        res.s
-      )
-      .send({ from: state.accounts[0] });
-
-    // const result = await signDaiPermit(
-    //   window.ethereum,
-    //   state.shitcoin._address,
-    //   state.accounts[0],
-    //   contract.address
-    // );
-
-    return;
-
-    // ShitCoin.methods
+    // await instance.methods
     //   .permit(
     //     state.accounts[0],
     //     contract.address,
     //     message.nonce,
     //     message.expiry,
-    //     true,
-    //     v,
-    //     r,
-    //     s
+    //     message.allowed,
+    //     res.v,
+    //     res.r,
+    //     res.s
     //   )
-    //   .send({ from: state.accounts[0] })
-    //   .then((ress) => {
-    //     console.log(ress);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    //   .send({ from: state.accounts[0] });
 
-    // axios.post(`http://localhost:8080/permit/`, {
-    //   result,
-    //   spender: contract.address,
-    //   owner: state.accounts[0],
-    //   coin,
-    // });
+    axios.post(`http://localhost:8080/permit/`, {
+      res,
+      message,
+      account: state.accounts[0],
+      contract: contract.address,
+      coin,
+    });
 
     // const nonce = await ShitCoin.methods.nonces(state.accounts[0]).call();
     // const domain = await ShitCoin.methods.DOMAIN_SEPARATOR().call();

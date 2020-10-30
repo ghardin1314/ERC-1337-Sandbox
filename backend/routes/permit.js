@@ -27,30 +27,23 @@ let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 router.route("/").post(async (req, res) => {
   var instance = new web3.eth.Contract(contract.abi, req.body.coin);
 
-  const result = req.body.result;
-  const spender = req.body.spender;
-  const owner = req.body.owner;
+  const result = req.body.res;
+  const message = req.body.message;
+  const account = req.body.account;
+  const subscription = req.body.contract;
+
   const tx = instance.methods.permit(
-    owner,
-    spender,
-    parseInt(result.nonce),
-    result.expiry,
-    true,
+    account,
+    subscription,
+    message.nonce,
+    message.expiry,
+    message.allowed,
     result.v,
     result.r,
     result.s
   );
   //   console.log(tx);
   const gas = await tx.estimateGas({ from: myAddress });
-  console.log(gas);
-  //   tx.estimateGas({ from: myAddress })
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   const gas = 31128;
   const gasPrice = await web3.eth.getGasPrice();
   const data = tx.encodeABI();
   var nonce = await web3.eth.getTransactionCount(myAddress, "pending");
@@ -68,7 +61,7 @@ router.route("/").post(async (req, res) => {
   );
 
   console.log(
-    `Old approval: ${await instance.methods.allowance(owner, spender).call()}`
+    `Old approval: ${await instance.methods.allowance(account, subscription).call()}`
   );
   const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
@@ -84,7 +77,7 @@ router.route("/").post(async (req, res) => {
   //     });
 
   console.log(
-    `New approval: ${await instance.methods.allowance(owner, spender).call()}`
+    `New approval: ${await instance.methods.allowance(account, subscription).call()}`
   );
 });
 

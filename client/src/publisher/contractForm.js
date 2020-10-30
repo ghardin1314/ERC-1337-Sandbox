@@ -9,10 +9,17 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import MyContext from "../MyContext";
 import axios from "axios";
 
 import Subscription, { abi, bytecode } from "../contracts/Subscription.json";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,10 +57,18 @@ export default function ContractForm() {
     period: "",
     value: "",
   });
+  const [open, setOpen] = React.useState(false);
 
   function handleChange(event) {
     setFormState({ ...formState, [event.target.name]: event.target.value });
   }
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   async function handleSubmit() {
     var decimals = await shitcoin.methods.decimals().call();
@@ -78,6 +93,7 @@ export default function ContractForm() {
         })
         .then((res) => {
           setState(state);
+          setOpen(true)
         })
         .catch((err) => {
           console.log(err);
@@ -148,6 +164,11 @@ export default function ContractForm() {
           </Grid>
         </Grid>
       </Paper>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Successfully created contract
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

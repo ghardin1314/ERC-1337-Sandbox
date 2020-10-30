@@ -14,6 +14,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import MyContext from "../MyContext";
 import Subscription, { abi, bytecode } from "../contracts/Subscription.json";
 import { signDaiPermit } from "eth-permit";
+import { signPermit, domains } from "../utils/PermitToken.js";
 
 export default function SubsTable() {
   const context = useContext(MyContext);
@@ -72,23 +73,111 @@ export default function SubsTable() {
     var coin = contract.coin;
 
     console.log("signing");
+    var domain = domains["shitCoin"];
 
-    const result = await signDaiPermit(
-      window.ethereum,
-      state.shitcoin._address,
-      state.accounts[0],
-      contract.address
-    );
+    domain.verifyingContract = coin;
 
-    axios.post(`http://localhost:8080/permit/`, {
-      result,
+    console.log(domain);
+
+    var message = {
+      holder: state.accounts[0],
       spender: contract.address,
-      owner: state.accounts[0],
-    });
+      allowed: true,
+      expiry: 0,
+    };
+
+    const res = await signPermit(window.ethereum, domain, message);
+
+    message = res.message;
+
+    const r = res.sig.slice(0, 66);
+    const s = "0x" + res.sig.slice(66, 130);
+    const v = parseInt(res.sig.slice(130, 132));
+
+    const result = {
+      nonce: message.nonce,
+      expiry: message.expiry,
+      v,
+      r,
+      s,
+    };
+
+    // const result = await signDaiPermit(
+    //   window.ethereum,
+    //   state.shitcoin._address,
+    //   state.accounts[0],
+    //   contract.address
+    // );
+
+    console.log(result);
+
+    ShitCoin.methods
+      .permit(
+        state.accounts[0],
+        contract.address,
+        message.nonce,
+        message.expiry,
+        true,
+        v,
+        r,
+        s
+      )
+      .send({ from: state.accounts[0] })
+      .then((ress) => {
+        console.log(ress);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // axios.post(`http://localhost:8080/permit/`, {
+    //   result,
+    //   spender: contract.address,
+    //   owner: state.accounts[0],
+    //   coin,
+    // });
+
+    // const nonce = await ShitCoin.methods.nonces(state.accounts[0]).call();
+    // const domain = await ShitCoin.methods.DOMAIN_SEPARATOR().call();
+    // const PERMIT_TYPEHASH = await ShitCoin.methods.PERMIT_TYPEHASH().call();
+    // console.log(domain);
+    // console.log(PERMIT_TYPEHASH);
+
+    // const firstEncode = web3.eth.abi.encodeParameters(
+    //   ["bytes32", "address", "address", "uint256", "uint256", "bool"],
+    //   [PERMIT_TYPEHASH, state.accounts[0], contract.address, nonce, 0, true]
+    // );
+
+    // console.log(firstEncode);
+
+    // const tx = await ShitCoin.methods
+    //   .permit(state.accounts[0], contract.address, nonce, 0, true)
+    //   .send({ from: state.accounts[0] });
+
+    // console.log(tx);
+
+    // const logs = await web3.eth.getTransactionReceipt(tx.transactionHash);
+
+    // console.log(logs);
+
+    // await ShitCoin.methods
+    //   .permit(
+    //     state.accounts[0],
+    //     contract.address,
+    //     result.nonce,
+    //     result.expiry,
+    //     true,
+    //     result.v,
+    //     result.r,
+    //     result.s
+    //   )
+    //   .send({ from: state.accounts[0] });
 
     // await ShitCoin.methods
     //   .approve(contract.address, -1)
     //   .send({ from: state.accounts[0] });
+
+    return;
 
     var ethAddress = "0x0000000000000000000000000000000000000000";
 

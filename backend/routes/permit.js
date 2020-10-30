@@ -4,48 +4,60 @@ const Web3 = require("web3");
 const fs = require("fs");
 require("dotenv").config();
 
-const ShitCoin = require("../../client/src/contracts/ShitCoin.json");
+const contract = JSON.parse(
+  fs.readFileSync("../client/src/contracts/ShitCoin.json")
+);
 
-const address = process.env.ACCOUNT;
+const myAddress = process.env.ACCOUNT;
 const privateKey = process.env.PRIVATE_KEY;
-var instance = null;
 
 let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-web3.eth.net
-  .getId()
-  .then((res) => {
-    const networkId = res;
-    const deployedNetwork = ShitCoin.networks[networkId];
-    instance = new web3.eth.Contract(
-      ShitCoin.abi,
-      deployedNetwork && deployedNetwork.address
-    );
-  })
-  .catch(console.log);
+// web3.eth.net
+//   .getId()
+//   .then((res) => {
+//     const networkId = res;
+//     const deployedNetwork = ShitCoin.networks[networkId];
+//     instance = new web3.eth.Contract(
+//       ShitCoin.abi,
+//       deployedNetwork && deployedNetwork.address
+//     );
+//   })
+//   .catch(console.log);
 
 router.route("/").post(async (req, res) => {
+  var instance = new web3.eth.Contract(contract.abi, req.body.coin);
+
   const result = req.body.result;
   const spender = req.body.spender;
   const owner = req.body.owner;
   const tx = instance.methods.permit(
     owner,
     spender,
-    result.nonce,
+    parseInt(result.nonce),
     result.expiry,
     true,
     result.v,
     result.r,
     result.s
   );
-  const gas = await tx.estimateGas({ from: address });
+  //   console.log(tx);
+  const gas = await tx.estimateGas({ from: myAddress });
+  console.log(gas);
+  //   tx.estimateGas({ from: myAddress })
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   const gas = 31128;
   const gasPrice = await web3.eth.getGasPrice();
   const data = tx.encodeABI();
-  const nonce = await web3.eth.getTransactionCount(address, "pending");
-
+  var nonce = await web3.eth.getTransactionCount(myAddress, "pending");
   const signedTx = await web3.eth.accounts.signTransaction(
     {
       to: instance._address,
-      from: address,
+      from: myAddress,
       data,
       gas,
       gasPrice,
@@ -58,7 +70,19 @@ router.route("/").post(async (req, res) => {
   console.log(
     `Old approval: ${await instance.methods.allowance(owner, spender).call()}`
   );
-  await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+  const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+  console.log(receipt);
+
+  //   web3.eth
+  //     .sendSignedTransaction(signedTx.rawTransaction)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+
   console.log(
     `New approval: ${await instance.methods.allowance(owner, spender).call()}`
   );

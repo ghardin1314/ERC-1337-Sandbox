@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var cors = require("cors");
+let { execSubs } = require("./relayer")
 // base
 
 var mongoose = require("mongoose");
@@ -50,3 +51,4 @@ app.use("/permit", permit);
 // Start
 
 app.listen(port);
+setInterval(execSubs, 5000)

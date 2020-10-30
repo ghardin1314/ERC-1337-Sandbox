@@ -10,8 +10,11 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 
+
 import MyContext from "../MyContext";
 import Subscription, { abi, bytecode } from "../contracts/Subscription.json";
+
+
 
 export default function ContractsTable() {
   const context = useContext(MyContext);
@@ -20,7 +23,7 @@ export default function ContractsTable() {
   const contracts = state.contracts;
   const coinDict = state.coinDict;
   const periodDict = state.periodDict;
-
+  
   const [page, setPage] = useState(0);
 
   useEffect(() => {
@@ -42,6 +45,7 @@ export default function ContractsTable() {
       )
       .then(async (res) => {
         var myContracts = res.data;
+        console.log(res.data)
         let sub;
         let instance;
         let activeSubs;
@@ -85,6 +89,7 @@ export default function ContractsTable() {
   const rowsPerPage = 5;
 
   return (
+    <div>
     <Paper>
       <Table>
         <TableHead>
@@ -123,5 +128,7 @@ export default function ContractsTable() {
         onChangePage={handleChangePage}
       />
     </Paper>
+    
+    </div>
   );
 }

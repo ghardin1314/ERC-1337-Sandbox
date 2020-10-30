@@ -13,8 +13,12 @@ import TablePagination from "@material-ui/core/TablePagination";
 
 import MyContext from "../MyContext";
 import Subscription, { abi, bytecode } from "../contracts/Subscription.json";
+import ShitCoin, {
+  abi as sabi,
+  bytecode as sbytecode,
+} from "../contracts/ShitCoin.json";
 import { signDaiPermit } from "eth-permit";
-import { signPermit, domains } from "../utils/PermitToken.js";
+import { signTransferPermit } from "../utils/PermitToken.js";
 
 export default function SubsTable() {
   const context = useContext(MyContext);
@@ -72,35 +76,38 @@ export default function SubsTable() {
     var contract = contracts[i];
     var coin = contract.coin;
 
-    console.log("signing");
-    var domain = domains["shitCoin"];
+    var instance = new web3.eth.Contract(sabi, coin);
 
-    domain.verifyingContract = coin;
-
-    console.log(domain);
+    const nonce = await instance.methods.nonces(state.accounts[0]).call()
 
     var message = {
       holder: state.accounts[0],
       spender: contract.address,
       allowed: true,
-      expiry: 0,
+      nonce,
+      expiry: Date.now() + 120,
     };
 
-    const res = await signPermit(window.ethereum, domain, message);
+    const res = await signTransferPermit(web3, message, coin);
 
-    message = res.message;
+    console.log(res);
 
-    const r = res.sig.slice(0, 66);
-    const s = "0x" + res.sig.slice(66, 130);
-    const v = parseInt(res.sig.slice(130, 132));
+    
 
-    const result = {
-      nonce: message.nonce,
-      expiry: message.expiry,
-      v,
-      r,
-      s,
-    };
+    console.log(instance);
+
+    await instance.methods
+      .permit(
+        state.accounts[0],
+        contract.address,
+        message.nonce,
+        message.expiry,
+        message.allowed,
+        res.v,
+        res.r,
+        res.s
+      )
+      .send({ from: state.accounts[0] });
 
     // const result = await signDaiPermit(
     //   window.ethereum,
@@ -109,26 +116,26 @@ export default function SubsTable() {
     //   contract.address
     // );
 
-    console.log(result);
+    return;
 
-    ShitCoin.methods
-      .permit(
-        state.accounts[0],
-        contract.address,
-        message.nonce,
-        message.expiry,
-        true,
-        v,
-        r,
-        s
-      )
-      .send({ from: state.accounts[0] })
-      .then((ress) => {
-        console.log(ress);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // ShitCoin.methods
+    //   .permit(
+    //     state.accounts[0],
+    //     contract.address,
+    //     message.nonce,
+    //     message.expiry,
+    //     true,
+    //     v,
+    //     r,
+    //     s
+    //   )
+    //   .send({ from: state.accounts[0] })
+    //   .then((ress) => {
+    //     console.log(ress);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
     // axios.post(`http://localhost:8080/permit/`, {
     //   result,

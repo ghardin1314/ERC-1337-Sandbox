@@ -23,6 +23,7 @@ async function execSubs() {
       let address = contracts[i].address;
       var instance = new web3.eth.Contract(contract.abi, address);
       var subNumber = await instance.methods.getSubscriberListLength().call();
+      console.log(subNumber)
       for (var j = 1; j < subNumber; j++) {
         sub = await instance.methods.SubscriptionList(j).call();
         console.log(sub.nextWithdraw)
@@ -61,14 +62,14 @@ async function execSubs() {
             privateKey
           );
 
-        //   web3.eth
-        //     .sendSignedTransaction(signedTx.rawTransaction)
-        //     .then((res) => {
-        //       console.log(`Transaction hash: ${res.transactionHash}`);
-        //     })
-        //     .catch((err) => {
-        //       console.log(err);
-        //     });
+          web3.eth
+            .sendSignedTransaction(signedTx.rawTransaction)
+            .then((res) => {
+              console.log(`Transaction hash: ${res.transactionHash}`);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       }
     }

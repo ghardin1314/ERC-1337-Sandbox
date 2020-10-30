@@ -111,48 +111,6 @@ export default function SubsTable() {
       coin,
     });
 
-    // const nonce = await ShitCoin.methods.nonces(state.accounts[0]).call();
-    // const domain = await ShitCoin.methods.DOMAIN_SEPARATOR().call();
-    // const PERMIT_TYPEHASH = await ShitCoin.methods.PERMIT_TYPEHASH().call();
-    // console.log(domain);
-    // console.log(PERMIT_TYPEHASH);
-
-    // const firstEncode = web3.eth.abi.encodeParameters(
-    //   ["bytes32", "address", "address", "uint256", "uint256", "bool"],
-    //   [PERMIT_TYPEHASH, state.accounts[0], contract.address, nonce, 0, true]
-    // );
-
-    // console.log(firstEncode);
-
-    // const tx = await ShitCoin.methods
-    //   .permit(state.accounts[0], contract.address, nonce, 0, true)
-    //   .send({ from: state.accounts[0] });
-
-    // console.log(tx);
-
-    // const logs = await web3.eth.getTransactionReceipt(tx.transactionHash);
-
-    // console.log(logs);
-
-    // await ShitCoin.methods
-    //   .permit(
-    //     state.accounts[0],
-    //     contract.address,
-    //     result.nonce,
-    //     result.expiry,
-    //     true,
-    //     result.v,
-    //     result.r,
-    //     result.s
-    //   )
-    //   .send({ from: state.accounts[0] });
-
-    // await ShitCoin.methods
-    //   .approve(contract.address, -1)
-    //   .send({ from: state.accounts[0] });
-
-    return;
-
     var ethAddress = "0x0000000000000000000000000000000000000000";
 
     var meta = web3.eth.abi.encodeParameters(

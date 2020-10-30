@@ -65,17 +65,6 @@ router.route("/").post(async (req, res) => {
   );
   const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 
-  console.log(receipt);
-
-  //   web3.eth
-  //     .sendSignedTransaction(signedTx.rawTransaction)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-
   console.log(
     `New approval: ${await instance.methods.allowance(account, subscription).call()}`
   );

@@ -55,14 +55,15 @@ export default function MyDrawer() {
     setInterval(async () => {
       var accounts = await web3.eth.getAccounts();
       var coinbal = await shitcoin.methods.balanceOf(accounts[0]).call();
+      coinbal = parseFloat(web3.utils.fromWei(web3.utils.toBN(coinbal)));
       setCoinBal(coinbal);
       var ethbal = await web3.eth.getBalance(accounts[0]);
       ethbal = parseFloat(web3.utils.fromWei(web3.utils.toBN(ethbal)));
       setEthBal(ethbal.toFixed(2));
-      if (accounts[0] !== state.accounts[0]){
-        console.log("different")
-        state.accounts = accounts
-        setState(state)
+      if (accounts[0] !== state.accounts[0]) {
+        console.log("different");
+        state.accounts = accounts;
+        setState(state);
       }
     }, 1000);
   }

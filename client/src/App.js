@@ -33,35 +33,37 @@ function App() {
       if (networkId !== 5777) {
         alert("Contect to local host");
       }
-      var deployedNetwork = Registry.networks[networkId];
-      let registry = new web3.eth.Contract(
-        Registry.abi,
-        deployedNetwork && deployedNetwork.address
-      );
 
-      deployedNetwork = ShitCoin.networks[networkId];
+      var deployedNetwork = ShitCoin.networks[networkId];
       let shitcoin = new web3.eth.Contract(
         ShitCoin.abi,
         deployedNetwork && deployedNetwork.address
       );
 
+      shitcoin.events
+        .Transfer({ fromBlock: 0 }, function (err, evt) {
+          console.log(evt);
+        })
+        .on("data", (event) => {
+          console.log(event);
+        });
+
       var coinDict = state.coinDict;
       var periodDict = state.periodDict;
 
       coinDict[shitcoin._address] = "ShitCoin";
-      periodDict[0] = "Minute"
-      periodDict[1] = "Day"
-      periodDict[2] = "Week"
-      periodDict[3] = "Month"
-      periodDict[4] = "Second"
-      setState({ ...state, web3, accounts, shitcoin, registry, coinDict });
+      periodDict[0] = "Minute";
+      periodDict[1] = "Day";
+      periodDict[2] = "Week";
+      periodDict[3] = "Month";
+      periodDict[4] = "Second";
+      setState({ ...state, web3, accounts, shitcoin, coinDict });
 
       // window.ethereum.on("accountsChanged", async () => {
       //   console.log("accountchanged");
       //   var accounts = await web3.eth.getAccounts();
       //   setState({ ...state, accounts });
       // });
-
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(

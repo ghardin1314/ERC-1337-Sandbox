@@ -48,7 +48,9 @@ router.route("/").post(async (req, res) => {
   console.log(`Old balance: ${await instance.methods.balanceOf(user).call()}`);
 
   // const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-  await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+  var ress = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+  console.log(ress)
 
   console.log(`New balance: ${await instance.methods.balanceOf(user).call()}`);
 });

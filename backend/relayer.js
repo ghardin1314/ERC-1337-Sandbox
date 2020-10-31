@@ -27,9 +27,9 @@ async function execSubs() {
       for (var j = 1; j < subNumber; j++) {
         sub = await instance.methods.SubscriptionList(j).call();
         console.log(sub.nextWithdraw)
-        var date = new Date(sub.nextWithdraw * 1000);
-        console.log(date)
-        if (sub.status === "0") {
+        const now = Math.floor(Date.now() / 1000)
+        console.log(now)
+        if (sub.status === "0" && sub.nextWithdraw < now) {
           var hash = await instance.methods
             .getSubscriptionHash(
               sub.subscriber,
@@ -65,7 +65,7 @@ async function execSubs() {
           web3.eth
             .sendSignedTransaction(signedTx.rawTransaction)
             .then((res) => {
-              console.log(`Transaction hash: ${res.transactionHash}`);
+              console.log("Transfered");
             })
             .catch((err) => {
               console.log(err);

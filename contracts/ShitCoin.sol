@@ -53,7 +53,7 @@ contract ShitCoin is LibNote {
     // --- Token ---
 
     function mintTokens(address recipent) public {
-        _mint(recipent, 1000);
+        _mint(recipent, 1000 ether);
     }
 
     function _mint(address usr, uint wad) internal {

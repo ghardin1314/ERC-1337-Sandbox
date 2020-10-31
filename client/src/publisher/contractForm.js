@@ -9,8 +9,8 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 import MyContext from "../MyContext";
 import axios from "axios";
@@ -63,7 +63,7 @@ export default function ContractForm() {
     setFormState({ ...formState, [event.target.name]: event.target.value });
   }
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -72,6 +72,8 @@ export default function ContractForm() {
 
   async function handleSubmit() {
     var decimals = await shitcoin.methods.decimals().call();
+
+    console.log(decimals);
     let contract = new context.state.web3.eth.Contract(abi, {
       from: state.accounts[0],
     });
@@ -80,7 +82,7 @@ export default function ContractForm() {
         context.state.accounts[0],
         formState.coin,
         parseInt(formState.period),
-        parseInt(formState.value),
+        state.web3.utils.toWei(formState.value),
       ];
       let res = await axios.post("http://localhost:8080/deploy", { args });
 
@@ -93,7 +95,7 @@ export default function ContractForm() {
         })
         .then((res) => {
           setState(state);
-          setOpen(true)
+          setOpen(true);
         })
         .catch((err) => {
           console.log(err);

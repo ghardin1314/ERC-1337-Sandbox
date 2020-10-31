@@ -19,7 +19,7 @@ router.route("/").post(async (req, res) => {
   var instance = new web3.eth.Contract(contract.abi);
   const tx = instance.deploy({
     data: bytecode,
-    arguments: [address, args[0], args[1], args[2], args[3]],
+    arguments: [args[0], address, args[1], args[2], args[3]],
   });
   const gas = await tx.estimateGas({ from: address });
   const gasPrice = await web3.eth.getGasPrice();

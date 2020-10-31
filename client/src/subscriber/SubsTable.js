@@ -115,7 +115,7 @@ export default function SubsTable() {
 
     var meta = web3.eth.abi.encodeParameters(
       ["address", "uint256"],
-      [state.accounts[0], 1]
+      [state.accounts[0], contract.period]
     );
 
     var data = web3.eth.abi.encodeParameters(["address"], [coin]);
@@ -178,7 +178,7 @@ export default function SubsTable() {
                 <TableCell component="th" scope="row">
                   {contract.publisher}
                 </TableCell>
-                <TableCell>{contract.value}</TableCell>
+                <TableCell>{web3.utils.fromWei(contract.value)}</TableCell>
                 <TableCell>{periodDict[contract.period]}</TableCell>
                 <TableCell>{coinDict[contract.coin]}</TableCell>
                 <TableCell>
